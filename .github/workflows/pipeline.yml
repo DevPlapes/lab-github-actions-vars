@@ -7,8 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Passo 3: Auditoria com Variaveis Padrao
-        run: |
-          echo "O usuário ${{ github.actor }} disparou este workflow no repositório ${{ github.repository }}. O sistema operacional do runner é ${{ runner.os }}."
+        run: echo "O usuário ${{ github.actor }} disparou este workflow no repositório ${{ github.repository }}. O sistema operacional do runner é ${{ runner.os }}."
 
       - name: Passo 4: Gerar Codigo Dinamico
         run: |
@@ -16,8 +15,7 @@ jobs:
           echo "BUILD_HASH=$RANDOM_NUM" >> $GITHUB_ENV
 
       - name: Passo 5: Usar Codigo Dinamico
-        run: |
-          echo "O hash gerado para este build foi: $BUILD_HASH"
+        run: echo "O hash gerado para este build foi: $BUILD_HASH"
 
   deploy_app:
     needs: build_app
