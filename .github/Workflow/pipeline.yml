@@ -1,0 +1,53 @@
+name: Desafio de Variaveis e Escopos
+
+on:
+  workflow_dispatch: # Permite rodar manualmente no GitHub
+
+env:
+  APP_NAME: "Sistema de Gerenciamento" # Escopo Global
+
+jobs:
+  build_app:
+    runs-on: ubuntu-latest
+    env:
+      BUILD_VERSION: "v1.2.0" # Escopo do Job
+    
+    steps:
+      - name: Passo 1: Variaveis em Escopos Diferentes
+        run: |
+          echo "Nome do App: $APP_NAME"
+          echo "Versao: $BUILD_VERSION"
+          STEP_TEMP="Temporaria"
+          echo "Variavel de Step: $STEP_TEMP"
+
+      - name: Passo 2: Observando o Escopo da STEP_TEMP
+        run: |
+          echo "Tentando ler STEP_TEMP: $STEP_TEMP"
+          echo "(Ficara vazio porque STEP_TEMP so existiu no passo anterior)"
+
+      - name: Passo 3: Auditoria com Variaveis Padrao
+        run: |
+          echo "O usuario $GITHUB_ACTOR disparou este workflow no repositorio $GITHUB_REPOSITORY. O sistema operacional do runner e $RUNNER_OS."
+
+      - name: Passo 4: Gerar Codigo Dinamico
+        run: |
+          RANDOM_NUM=$RANDOM
+          echo "BUILD_HASH=$RANDOM_NUM" >> $GITHUB_ENV
+
+      - name: Passo 5: Usar Codigo Dinamico
+        run: |
+          echo "O hash gerado para este build foi: $BUILD_HASH"
+
+  deploy_app:
+    needs: build_app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Passo 6: Acessando Secrets e Vars
+        env:
+          URL: ${{ vars.URL_AMBIENTE }}
+          TOKEN: ${{ secrets.API_TOKEN_PROD }}
+        run: |
+          echo "Enviando build para a URL: $URL"
+          echo "Usando o token de seguranca: $TOKEN"
+
+          
