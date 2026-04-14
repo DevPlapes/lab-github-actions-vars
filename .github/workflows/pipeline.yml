@@ -1,18 +1,32 @@
 name: Desafio Final
 on:
   workflow_dispatch:
+
 jobs:
-  teste:
+  build_app:
     runs-on: ubuntu-latest
     steps:
       - name: Passo 3: Auditoria com Variaveis Padrao
         run: |
           echo "O usuário ${{ github.actor }} disparou este workflow no repositório ${{ github.repository }}. O sistema operacional do runner é ${{ runner.os }}."
 
-      - name: Verificando Variaveis e Secrets
+      - name: Passo 4: Gerar Codigo Dinamico
+        run: |
+          RANDOM_NUM=$RANDOM
+          echo "BUILD_HASH=$RANDOM_NUM" >> $GITHUB_ENV
+
+      - name: Passo 5: Usar Codigo Dinamico
+        run: |
+          echo "O hash gerado para este build foi: $BUILD_HASH"
+
+  deploy_app:
+    needs: build_app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Passo 6: Acessando Secrets e Vars
         env:
           URL: ${{ vars.URL_AMBIENTE }}
           TOKEN: ${{ secrets.API_TOKEN_PROD }}
         run: |
-          echo "URL: $URL"
-          echo "Token: $TOKEN"
+          echo "Enviando build para a URL: $URL"
+          echo "Usando o token de segurança: $TOKEN"
