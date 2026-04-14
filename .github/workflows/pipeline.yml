@@ -5,11 +5,14 @@ jobs:
   teste:
     runs-on: ubuntu-latest
     steps:
-      - name: Verificando Variaveis
+      - name: Passo 3: Auditoria com Variaveis Padrao
+        run: |
+          echo "O usuário ${{ github.actor }} disparou este workflow no repositório ${{ github.repository }}. O sistema operacional do runner é ${{ runner.os }}."
+
+      - name: Verificando Variaveis e Secrets
         env:
           URL: ${{ vars.URL_AMBIENTE }}
           TOKEN: ${{ secrets.API_TOKEN_PROD }}
         run: |
-          echo "App: ${{ github.repository }}"
           echo "URL: $URL"
           echo "Token: $TOKEN"
